@@ -1,0 +1,84 @@
+.flex-holder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-header, .register-header {
+    margin-top: 15%;
+    margin-bottom: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.login-container {
+    height: 385px;
+    width: 400px;
+}
+
+.register-container {
+    height: 420px;
+    width: 400px;
+}
+
+.login-container, .register-container {
+    border: 2px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5%;
+}
+
+.box-username {
+    margin-bottom: 15px;
+}
+
+.box-password {
+    margin-bottom: 45px;
+}
+
+.register-container .box-password {
+    margin-bottom: 15px;
+}
+
+.box-button {
+    width: 250px;
+}
+
+.sign-up-container {
+    padding-top: 15px;
+}
+
+.register-button-container {
+    padding-top: 50px;
+    padding-bottom: 5px;
+}
+
+.error-message-container {
+    margin-top: 15px;
+} 
+
+@media screen and (max-width: 425px) {
+.login-header, .register-header {
+    font-size: 15px;
+}
+
+.login-container, .register-container {
+    width: 200px;
+}
+
+.password-input input, .username-input input {
+    width: 150px;
+}
+
+.sign-up-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+}
+
+.box-button {
+    width: 150px;
+}
+}

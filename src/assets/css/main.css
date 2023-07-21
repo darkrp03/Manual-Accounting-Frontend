@@ -1,0 +1,30 @@
+@import './base.css';
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+body {
+  background-color: #f3f0ef;
+}
+
+* {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
