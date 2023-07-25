@@ -86,7 +86,7 @@ export default {
                 return;
             }
 
-            router.push({path: '/'});
+            router.push('/');
         }
     }
 }

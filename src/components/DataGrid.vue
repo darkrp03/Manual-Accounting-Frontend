@@ -1,8 +1,10 @@
 <template>
     <div class="grid">
+        <Loading v-if="showLoadingAnimation" />
         <div class="data">
             <div class="row">
                 <div class="col col-header">Name</div>
+
                 <div class="col col-header">Surname</div>
                 <div class="col col-header">Entry time</div>
                 <div class="col col-header">Actions</div>
@@ -20,11 +22,11 @@
                     </div>
                     <div class="col">
                         <div class="buttons">
-                            <div class="edit-button" >
-                                <EditButton @click="handleOpenForm(visitor.visitorId)"/>
+                            <div class="edit-button">
+                                <EditButton @click="handleOpenForm(visitor.visitorId)" />
                             </div>
                             <div class="delete-button">
-                                <DeleteButton @click="deleteVisitor(visitor.visitorId)"/>
+                                <DeleteButton @click="deleteVisitor(visitor.visitorId)" />
                             </div>
                         </div>
                     </div>
@@ -39,13 +41,15 @@
 import VisitorFormVue from './VisitorForm.vue';
 import EditButton from './EditButton.vue';
 import DeleteButton from './DeleteButton.vue';
+import Loading from './Loading.vue';
 import { Visitor } from '@/models/visitor';
 
 export default {
     components: {
         EditButton,
         DeleteButton,
-        VisitorFormVue
+        VisitorFormVue,
+        Loading
     },
     props: {
         visitors: Array<Visitor>
@@ -54,22 +58,11 @@ export default {
         return {
             myVisitors: this.visitors,
             isVisibleForm: false,
+            showLoadingAnimation: false,
             visitorId: ''
         }
     },
     methods: {
-        handleOpenForm(visitorId?: string) {
-            this.isVisibleForm = true;
-
-            if (visitorId) {
-                this.visitorId = visitorId;
-            }
-        },
-        handleCloseForm() {
-            this.isVisibleForm = false;
-            
-            this.visitorId = '';
-        },
         async updateVisitor(data: any) {
             const { visitorName, visitorSurname } = data;
 
@@ -79,6 +72,8 @@ export default {
 
             this.isVisibleForm = false;
 
+            this.showLoadingAnimation = true;
+
             const visitorIndex = this.myVisitors!.findIndex(visitor => visitor.visitorId == this.visitorId);
             const oldVisitorName = this.myVisitors![visitorIndex].visitorName;
             const oldVisitorSurname = this.myVisitors![visitorIndex].visitorSurname;
@@ -87,7 +82,7 @@ export default {
                 visitorId: this.visitorId,
             }
 
-            if ((visitorName != '' &&  visitorName != oldVisitorName)) {
+            if ((visitorName != '' && visitorName != oldVisitorName)) {
                 visitor.visitorName = visitorName;
                 this.myVisitors![visitorIndex].visitorName = visitorName;
             }
@@ -96,7 +91,7 @@ export default {
                 visitor.visitorSurname = visitorSurname;
                 this.myVisitors![visitorIndex].visitorSurname = visitorSurname;
             }
-            
+
             await fetch(import.meta.env.VITE_UPDATE_VISITOR, {
                 method: 'POST',
                 mode: 'cors',
@@ -106,13 +101,17 @@ export default {
                 body: JSON.stringify(visitor),
                 credentials: "include"
             });
+
+            this.showLoadingAnimation = false;
         },
         async deleteVisitor(id?: string) {
+            this.showLoadingAnimation = true;
+
             this.myVisitors = this.visitors?.filter(visitor => visitor.visitorId != id);
 
             const deleteUserURL = `${import.meta.env.VITE_DELETE_VISITOR}`;
             await fetch(deleteUserURL, {
-                method: 'POST', 
+                method: 'POST',
                 body: JSON.stringify({
                     visitorId: id
                 }),
@@ -121,6 +120,20 @@ export default {
                 },
                 credentials: "include"
             });
+
+            this.showLoadingAnimation = false;
+        },
+        handleOpenForm(visitorId?: string) {
+            this.isVisibleForm = true;
+
+            if (visitorId) {
+                this.visitorId = visitorId;
+            }
+        },
+        handleCloseForm() {
+            this.isVisibleForm = false;
+
+            this.visitorId = '';
         }
     }
 }
