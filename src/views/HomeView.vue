@@ -1,6 +1,7 @@
 <template>
   <main>
     <div class="flex-holder">
+      <Loading v-if="showLoadingAnimation" />
       <div v-if="searchMode" class="dataGrid-container">
         <DataGrid :visitors="foundVisitors" />
       </div>
@@ -29,6 +30,7 @@ import AddButton from '../components/AddButton.vue';
 import SearchBar from '../components/SearchBar.vue';
 import LogoutButton from '@/components/LogoutButton.vue';
 import VisitorForm from '@/components/VisitorForm.vue';
+import Loading from '@/components/Loading.vue';
 import type { Visitor } from '@/models/visitor';
 import { DateGenerator } from '@/models/date-generator';
 import { v4 as uuidv4 } from 'uuid';
@@ -40,27 +42,44 @@ export default {
     AddButton,
     SearchBar,
     VisitorForm,
-    LogoutButton
+    LogoutButton,
+    Loading
   },
   data() {
     return {
       visitors: [] as Visitor[],
       foundVisitors: [] as Visitor[],
       isVisibleForm: false,
+      showLoadingAnimation: false,
       searchMode: false,
+      myTimer: 0
     }
   },
   async created() {
     await this.getVisitors();
+    await this.getLoginStatus();
   },
   methods: {
-    handleOpenForm() {
-      this.isVisibleForm = true;
+    async getLoginStatus() {
+      this.myTimer = setInterval(async () => {
+        const response = await fetch(import.meta.env.VITE_LOGIN_STATUS, {
+          credentials: 'include'
+        });
+
+        if (response.status == 401) {
+          router.push('/login');
+          clearInterval(this.myTimer);
+        } 
+      }, 500000);
     },
-    handleCloseForm() {
-      this.isVisibleForm = false;
+    async logout() {
+      await fetch(import.meta.env.VITE_LOGOUT, { credentials: 'include' });
+
+      router.push('/login');
     },
     async getVisitors() {
+      this.showLoadingAnimation = true;
+      
       const response = await fetch(import.meta.env.VITE_GET_VISITORS, { credentials: "include" });
       const data = await response.json();
 
@@ -69,6 +88,8 @@ export default {
 
         this.visitors.push(visitor);
       });
+
+      this.showLoadingAnimation = false;
     },
     async addVisitor(data: any) {
       const { visitorName, visitorSurname } = data;
@@ -78,6 +99,8 @@ export default {
       }
 
       this.isVisibleForm = false;
+
+      this.showLoadingAnimation = true;
 
       const dateGenerator = new DateGenerator();
 
@@ -98,7 +121,15 @@ export default {
         mode: "cors",
         body: JSON.stringify(visitor),
         credentials: "include"
-      })
+      });
+
+      this.showLoadingAnimation = false;
+    },
+    handleOpenForm() {
+      this.isVisibleForm = true;
+    },
+    handleCloseForm() {
+      this.isVisibleForm = false;
     },
     findVisitor(data: string) {
       const searchValue = data;
@@ -111,11 +142,6 @@ export default {
 
       this.searchMode = true;
       this.foundVisitors = this.visitors.filter(visitor => visitor.visitorName == searchValue || visitor.visitorSurname == searchValue); 
-    },
-    async logout() {
-      await fetch(import.meta.env.VITE_LOGOUT, { credentials: 'include' });
-
-      router.push({path: '/login'});
     }
   }
 }
