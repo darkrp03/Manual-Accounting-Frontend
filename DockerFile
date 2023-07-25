@@ -1,8 +1,8 @@
-FROM node:18-alpine
+FROM node:18
 WORKDIR /usr/src/app
-RUN git clone https://github.com/darkrp03/Manual-Accounting-Frontend /app
-RUN cd /Manual-Accounting-Frontend
+RUN npm install -g http-server
+RUN git clone https://github.com/darkrp03/Manual-Accounting-Frontend .
 RUN npm install
 COPY .env .env
-EXPOSE 8080
-CMD [ "npm run dev" ]
+RUN npm run build
+CMD [ "http-server", "dist" ]
