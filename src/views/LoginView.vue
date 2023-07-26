@@ -22,7 +22,7 @@
                 </div>
                 <div class="sign-up-container">
                     <span>Don't have an account?  </span>
-                    <a href="/register">Create Account</a>
+                    <router-link to="/register">Create Account</router-link>
                 </div>
                 <div class="error-message-container">
                     <ErrorMessage :text="warningText"/>

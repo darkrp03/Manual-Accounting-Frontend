@@ -15,7 +15,7 @@
     "bootstrap": "^5.3.0",
     "uuid": "^9.0.0",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
@@ -23,6 +23,7 @@
     "@types/node": "^18.16.17",
     "@types/uuid": "^9.0.2",
     "@types/vue": "^2.0.0",
+    "@types/vue-router": "^2.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "@vue/eslint-config-prettier": "^7.1.0",
