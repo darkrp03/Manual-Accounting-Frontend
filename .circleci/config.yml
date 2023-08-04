@@ -29,3 +29,6 @@ workflows:
                 from: dist/
                 to: s3://sample-app-vue
                 arguments: --recursive
+      - test:
+        override:
+          - echo "done"
